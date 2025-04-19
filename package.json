@@ -2,15 +2,23 @@
   "name": "studio-bd",
   "version": "1.0.0",
   "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/Aswin0056/Studio-BD#readme",
+  "bugs": {
+    "url": "https://github.com/Aswin0056/Studio-BD/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aswin0056/Studio-BD.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
@@ -20,5 +28,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "pg": "^8.14.1"
-  }
+  },
+  "devDependencies": {}
 }
