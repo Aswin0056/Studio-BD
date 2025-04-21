@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const { Pool } = require("pg");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+// In your server.js or routes file
+const axios = require('axios');
 
 dotenv.config();
 
@@ -79,44 +81,70 @@ app.post("/api/register", async (req, res) => {
 });
 
 
-// In your server.js or routes file
-const axios = require('axios');
+
 
 const getStatus = async (link) => {
-  if (!link.startsWith("http")) {
-    link = "http://" + link; // Default to http if no scheme
+  if (!link.startsWith("http://") && !link.startsWith("https://")) {
+    link = "http://" + link; // Default to http if no scheme is present
   }
+
   try {
     const response = await axios.get(`${link}/status`, { timeout: 5000 });
     return response.data.status || "Online";
   } catch (error) {
     if (error.response) {
-      return "Offline"; // server responded with a non-2xx status
+      // Server responded with a non-2xx status code
+      return `Offline (Status: ${error.response.status})`; // You can include status for more context
     } else if (error.request) {
-      return "Offline"; // no response from server
+      // No response received
+      return "Offline (No response from server)";
     } else {
-      return "Unknown"; // some other error
+      // Some other error occurred (e.g., bad URL, etc.)
+      return `Unknown error: ${error.message}`;
     }
   }
 };
 
 
+// Fetch Projects
 app.get("/api/projects", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM projects");
+    res.json({ projects: result.rows });
+  } catch (err) {
+    console.error("Error fetching projects", err);
+    res.status(500).json({ message: "Failed to fetch projects" });
+  }
+});
 
-    // Fetch project status asynchronously
-    const projectsWithStatus = await Promise.all(
-      result.rows.map(async (project) => {
-        const status = await getStatus(project.link);
-        return { ...project, status };
-      })
+// Add New Project
+app.post("/api/projects", async (req, res) => {
+  const { name, imageUrl, link, status, commandsUsed, userCount } = req.body;
+  
+  try {
+    const result = await pool.query(
+      "INSERT INTO projects (name, image_url, link, status, commands_used, user_count) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [name, imageUrl, link, status, commandsUsed, userCount]
     );
 
-    res.json({ projects: projectsWithStatus });
+    const newProject = result.rows[0];
+    res.status(201).json(newProject);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to fetch projects" });
+    console.error("Error adding project:", err);
+    res.status(500).json({ message: "Failed to add project" });
+  }
+});
+
+// Delete Project
+app.delete("/api/projects/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await pool.query("DELETE FROM projects WHERE id = $1", [id]);
+    res.status(200).json({ message: "Project deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting project", err);
+    res.status(500).json({ message: "Failed to delete project" });
   }
 });
 
