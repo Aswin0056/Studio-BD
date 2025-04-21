@@ -89,17 +89,38 @@ app.post("/api/register", async (req, res) => {
 // Save or update reminder for a specific user
 app.post("/api/reminder", async (req, res) => {
   const { text } = req.body;
+  const userId = 1; // Temporary default user
+
   if (!text) return res.status(400).json({ message: "Reminder text is required" });
 
   try {
     const result = await pool.query(
-      "INSERT INTO reminders (text) VALUES ($1) RETURNING *",
-      [text]
-    );
-    res.json(result.rows[0]);
+  `INSERT INTO reminders (user_id, reminder_text)
+   VALUES ($1, $2)
+   ON CONFLICT (user_id)
+   DO UPDATE SET reminder_text = $2, updated_at = CURRENT_TIMESTAMP
+   RETURNING *`,
+  [userId, text]
+);
+
+
+    res.json({ reminder: result.rows[0] });
   } catch (err) {
     console.error("Error saving reminder:", err);
     res.status(500).json({ message: "Failed to add reminder" });
+  }
+});
+
+// Delete reminder for a specific user
+app.delete("/api/reminder", async (req, res) => {
+  const userId = req.user.id; // use authentication if available
+
+  try {
+    await pool.query("DELETE FROM reminders WHERE user_id = $1", [userId]);
+    res.json({ message: "Reminder deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting reminder", err);
+    res.status(500).json({ message: "Failed to delete reminder" });
   }
 });
 
