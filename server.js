@@ -110,12 +110,22 @@ const getStatus = async (link) => {
 app.get("/api/projects", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM projects");
-    res.json({ projects: result.rows });
+
+    // Convert snake_case to camelCase
+    const camelCaseProjects = result.rows.map(project => ({
+      ...project,
+      imageUrl: project.image_url,
+      commandsUsed: project.commands_used,
+      userCount: project.user_count,
+    }));
+
+    res.json({ projects: camelCaseProjects });
   } catch (err) {
     console.error("Error fetching projects", err);
     res.status(500).json({ message: "Failed to fetch projects" });
   }
 });
+
 
 // Add New Project
 app.post("/api/projects", async (req, res) => {
