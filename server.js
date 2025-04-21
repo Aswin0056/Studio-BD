@@ -29,22 +29,22 @@ app.post("/api/login", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     const user = result.rows[0];
-
+  
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(404).json({ message: "User not found." });
     }
-
+  
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-
+  
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-
+  
     res.json({
       token,
       user: {
@@ -53,9 +53,10 @@ app.post("/api/login", async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Login Error:", err);  // log full error details
+    console.error("Login Error:", err); // Log the full error for debugging
     res.status(500).json({ message: "Server error" });
   }
+  
 });
 
 
