@@ -75,7 +75,12 @@ app.post("/api/register", async (req, res) => {
 
     res.status(201).json({ message: "User registered", token });
   } catch (err) {
-    console.error(err);
+    console.error("Registration Error:", err);
+
+    if (err.code === "23505") {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
     res.status(500).json({ message: "Server error" });
   }
 });
