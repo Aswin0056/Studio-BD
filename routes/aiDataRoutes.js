@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    await aiDb.query("INSERT INTO ai_data (question, answer) VALUES ($1, $2)", [question, answer]);
+    await aiDb.query("INSERT INTO chat_pairs (question, answer) VALUES ($1, $2)", [question, answer]);
     res.status(201).json({ message: "Q&A saved to AI DB" });
   } catch (err) {
     console.error("AI DB error:", err);
