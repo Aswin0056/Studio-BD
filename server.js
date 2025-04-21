@@ -110,11 +110,14 @@ app.get("/api/projects", async (req, res) => {
     }
   });
   
+  const aiDataRoutes = require("./routes/aiDataRoutes");
+app.use("/api/ai-data", aiDataRoutes);
+
 
 
 // SERVER START
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log("Connected to Supabase DB ");
+  console.log("Connected to Supabase DB 🚀");
 });
