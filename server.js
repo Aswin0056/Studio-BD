@@ -83,27 +83,11 @@ app.post("/api/register", async (req, res) => {
 
 
 
-const getStatus = async (link) => {
-  if (!link.startsWith("http://") && !link.startsWith("https://")) {
-    link = "http://" + link; // Default to http if no scheme is present
-  }
-
-  try {
-    const response = await axios.get(`${link}/status`, { timeout: 5000 });
-    return response.data.status || "Online";
-  } catch (error) {
-    if (error.response) {
-      // Server responded with a non-2xx status code
-      return `Offline (Status: ${error.response.status})`; // You can include status for more context
-    } else if (error.request) {
-      // No response received
-      return "Offline (No response from server)";
-    } else {
-      // Some other error occurred (e.g., bad URL, etc.)
-      return `Unknown error: ${error.message}`;
-    }
-  }
-};
+// Backend ping route
+app.get("/api/ping", (req, res) => {
+  console.log("Ping request received"); // For debugging
+  res.json({ message: "pong" });
+});
 
 
 // Fetch Projects
