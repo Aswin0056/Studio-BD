@@ -138,12 +138,11 @@ app.post("/api/projects", async (req, res) => {
 // Delete Project
 app.delete("/api/projects/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
     await pool.query("DELETE FROM projects WHERE id = $1", [id]);
     res.status(200).json({ message: "Project deleted successfully" });
   } catch (err) {
-    console.error("Error deleting project", err);
+    console.error("Error deleting project:", err);
     res.status(500).json({ message: "Failed to delete project" });
   }
 });
