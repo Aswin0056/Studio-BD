@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 // In your server.js or routes file
 const axios = require('axios');
+const router = express.Router();
 
 dotenv.config();
 
@@ -54,9 +55,33 @@ app.post("/api/login", async (req, res) => {
 });
 
 // REGISTER ROUTE
+
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
+
+
+// router.post("/register", async (req, res) => {
+//   const { username, email, password } = req.body;
+
+//   try {
+//     const userExists = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+//     if (userExists.rows.length > 0) {
+//       return res.status(400).json({ message: "Email already registered" });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     await pool.query(
+//       "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
+//       [username, email, hashedPassword]
+//     );
+
+//     res.status(201).json({ message: "User registered successfully" });
+//   } catch (err) {
+//     console.error("Auth Route Error:", err.message);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 // Assuming you're using Express for your backend
 
