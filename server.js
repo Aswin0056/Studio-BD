@@ -49,10 +49,11 @@ app.post("/api/login", async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    console.error("Login Error:", err);  // log full error details
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // REGISTER ROUTE
 
