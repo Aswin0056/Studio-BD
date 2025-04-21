@@ -84,41 +84,22 @@ app.post("/api/register", async (req, res) => {
 
 // Fetch reminder for a specific user
 // Express backend code
-app.post("/api/reminder", async (req, res) => {
-  const { text } = req.body;
-  // Ensure you have a validation step if needed
-  if (!text) {
-    return res.status(400).json({ message: "Reminder text is required" });
-  }
-
-  try {
-    // Save the reminder in your database (example with PostgreSQL)
-    const result = await pool.query(
-      "INSERT INTO reminders (text) VALUES ($1) RETURNING *",
-      [text]
-    );
-    res.json(result.rows[0]); // Send the newly created reminder back
-  } catch (err) {
-    console.error("Error saving reminder:", err);
-    res.status(500).json({ message: "Failed to add reminder" });
-  }
-});
 
 
 // Save or update reminder for a specific user
 app.post("/api/reminder", async (req, res) => {
-  const userId = req.user.id;  // Again, use appropriate authentication to get user ID
-  const { reminder_text } = req.body;
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ message: "Reminder text is required" });
 
   try {
     const result = await pool.query(
-      "INSERT INTO reminders (user_id, reminder_text) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET reminder_text = $2, updated_at = CURRENT_TIMESTAMP RETURNING *",
-      [userId, reminder_text]
+      "INSERT INTO reminders (text) VALUES ($1) RETURNING *",
+      [text]
     );
-    res.json({ reminder: result.rows[0] });
+    res.json(result.rows[0]);
   } catch (err) {
-    console.error("Error saving reminder", err);
-    res.status(500).json({ message: "Failed to save reminder" });
+    console.error("Error saving reminder:", err);
+    res.status(500).json({ message: "Failed to add reminder" });
   }
 });
 
