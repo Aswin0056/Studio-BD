@@ -83,11 +83,7 @@ app.post("/api/register", async (req, res) => {
 
 
 
-// Backend ping route
-app.get("/api/ping", (req, res) => {
-  console.log("Ping request received"); // For debugging
-  res.json({ message: "pong" });
-});
+
 
 
 // Fetch Projects
