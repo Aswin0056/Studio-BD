@@ -80,10 +80,36 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
+// Assuming you're using Express for your backend
 
+// Fetch reminder for a specific user
+app.get("/api/reminder", async (req, res) => {
+  const userId = req.user.id;  // You may need to use authentication middleware
+  try {
+    const result = await pool.query("SELECT * FROM reminders WHERE user_id = $1", [userId]);
+    res.json({ reminder: result.rows[0] });
+  } catch (err) {
+    console.error("Error fetching reminder", err);
+    res.status(500).json({ message: "Failed to fetch reminder" });
+  }
+});
 
+// Save or update reminder for a specific user
+app.post("/api/reminder", async (req, res) => {
+  const userId = req.user.id;  // Again, use appropriate authentication to get user ID
+  const { reminder_text } = req.body;
 
-
+  try {
+    const result = await pool.query(
+      "INSERT INTO reminders (user_id, reminder_text) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET reminder_text = $2, updated_at = CURRENT_TIMESTAMP RETURNING *",
+      [userId, reminder_text]
+    );
+    res.json({ reminder: result.rows[0] });
+  } catch (err) {
+    console.error("Error saving reminder", err);
+    res.status(500).json({ message: "Failed to save reminder" });
+  }
+});
 
 
 // Fetch Projects
