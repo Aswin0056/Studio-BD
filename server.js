@@ -91,31 +91,7 @@ router.post("/register", async (req, res) => {
 
 
 // Save or update reminder for a specific user
-app.post("/api/reminder", async (req, res) => {
-  const { text } = req.body;
-  const userId = 1; // Temporary default user
-
-  if (!text) return res.status(400).json({ message: "Reminder text is required" });
-
-  try {
-    const result = await pool.query(
-  `INSERT INTO reminders (user_id, reminder_text)
-   VALUES ($1, $2)
-   ON CONFLICT (user_id)
-   DO UPDATE SET reminder_text = $2, updated_at = CURRENT_TIMESTAMP
-   RETURNING *`,
-  [userId, text]
-);
-
-
-    res.json({ reminder: result.rows[0] });
-  } catch (err) {
-    console.error("Error saving reminder:", err);
-    res.status(500).json({ message: "Failed to add reminder" });
-  }
-});
-
-// Delete reminder for a specific user
+// ✅ KEEP THIS ONE ONLY
 app.post("/api/reminder", async (req, res) => {
   const { text } = req.body;
   const userId = 1;
@@ -140,6 +116,8 @@ app.post("/api/reminder", async (req, res) => {
 });
 
 
+
+
 // Fetch Projects
 app.get("/api/projects", async (req, res) => {
   try {
@@ -162,22 +140,21 @@ app.get("/api/projects", async (req, res) => {
 
 
 // Add New Project
-app.post("/api/projects", async (req, res) => {
-  const { name, imageUrl, link, status, commandsUsed, userCount } = req.body;
-  
+app.post("/api/project", async (req, res) => {
   try {
+    const { name, image_url, link, status, commands_used, user_count } = req.body;
     const result = await pool.query(
       "INSERT INTO projects (name, image_url, link, status, commands_used, user_count) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [name, imageUrl, link, status, commandsUsed, userCount]
+      [name, image_url, link, status, commands_used, user_count]
     );
-
-    const newProject = result.rows[0];
-    res.status(201).json(newProject);
+    res.status(200).json(result.rows[0]);
   } catch (err) {
-    console.error("Error adding project:", err);
-    res.status(500).json({ message: "Failed to add project" });
+    console.error("🔥 Error inserting project:", err.message);
+    console.error("🧠 Stack Trace:", err.stack);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // Delete Project
 app.delete("/api/projects/:id", async (req, res) => {
