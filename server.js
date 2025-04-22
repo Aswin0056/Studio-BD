@@ -115,6 +115,22 @@ app.post("/api/reminder", async (req, res) => {
   }
 });
 
+app.get("/api/reminder", async (req, res) => {
+  const userId = 1; // hardcoded for now
+
+  try {
+    const result = await pool.query("SELECT * FROM reminders WHERE user_id = $1", [userId]);
+
+    if (result.rows.length === 0) {
+      return res.json({ reminder: { reminder_text: "" } }); // no reminder saved yet
+    }
+
+    res.json({ reminder: result.rows[0] });
+  } catch (err) {
+    console.error("Error fetching reminder:", err.message);
+    res.status(500).json({ message: "Failed to fetch reminder" });
+  }
+});
 
 
 
@@ -140,13 +156,22 @@ app.get("/api/projects", async (req, res) => {
 
 
 // Add New Project
-app.post("/api/project", async (req, res) => {
+app.post("/api/projects", async (req, res) => {
   try {
-    const { name, image_url, link, status, commands_used, user_count } = req.body;
+    const {
+      name,
+      imageUrl, // camelCase from frontend
+      link,
+      status,
+      commandsUsed,
+      userCount
+    } = req.body;
+
     const result = await pool.query(
       "INSERT INTO projects (name, image_url, link, status, commands_used, user_count) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [name, image_url, link, status, commands_used, user_count]
+      [name, imageUrl, link, status, commandsUsed, userCount] // use camelCase variables
     );
+
     res.status(200).json(result.rows[0]);
   } catch (err) {
     console.error("🔥 Error inserting project:", err.message);
@@ -154,6 +179,9 @@ app.post("/api/project", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
 
 
 // Delete Project
@@ -180,6 +208,8 @@ const limiter = rateLimit({
 
 app.use(limiter); // Apply to all routes
 
+const aiDataRoutes = require("./routes/aiDataRoutes");
+app.use("/api/aiData", aiDataRoutes); // ✅ this should be present
 
 
 // SERVER START
