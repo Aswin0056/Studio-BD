@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Pool } = require("pg");
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const pool = require('../db'); // your PostgreSQL pool setup
 
 router.post("/", async (req, res) => {
   const { name, email, message } = req.body;
