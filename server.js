@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 // In your server.js or routes file
 const axios = require('axios');
 const router = express.Router();
+const contactRoute = require("./routes/contact");
 
 dotenv.config();
 
@@ -214,7 +215,7 @@ app.use("/api/aiData", aiDataRoutes); // ✅ this should be present
 const commentRoutes = require('./routes/comments');
 app.use('/api', commentRoutes);
 
-
+app.use("/api/contact", contactRoute);
 
 // SERVER START
 const PORT = process.env.PORT || 5000;
