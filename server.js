@@ -211,6 +211,10 @@ app.use(limiter); // Apply to all routes
 const aiDataRoutes = require("./routes/aiDataRoutes");
 app.use("/api/aiData", aiDataRoutes); // ✅ this should be present
 
+const commentRoutes = require('./routes/comments');
+app.use('/api', commentRoutes);
+
+
 
 // SERVER START
 const PORT = process.env.PORT || 5000;
