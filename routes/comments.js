@@ -16,4 +16,19 @@ router.post('/add-comment', async (req, res) => {
   }
 });
 
-module.exports = router;
+// Get comments route
+router.get("/get-comments", async (req, res) => {
+    try {
+      // Query to retrieve all comments, ordered by latest first
+      const result = await pool.query("SELECT * FROM comments ORDER BY created_at DESC");
+      
+      // Send the comments as response
+      return res.status(200).json(result.rows);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      return res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+  
+  module.exports = router;
+  
