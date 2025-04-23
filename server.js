@@ -12,10 +12,7 @@ const contactRoute = require("./routes/contact");
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: ["http://localhost:3000", "https://azhstudioofficial.netlify.app/"], // Add both local and production
-}));
-
+app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
