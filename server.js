@@ -12,7 +12,10 @@ const contactRoute = require("./routes/contact");
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000", "https://azhstudioofficial.netlify.app/"], // Add both local and production
+}));
+
 app.use(express.json());
 
 const pool = new Pool({
@@ -215,7 +218,14 @@ app.use("/api/aiData", aiDataRoutes); // ✅ this should be present
 const commentRoutes = require('./routes/comments');
 app.use('/api', commentRoutes);
 
-app.use("/api/contact", contactRoute);
+router.post("/", async (req, res) => {
+  console.log("📩 Contact Form Data:", req.body); // <-- this helps debug
+
+  const { name, email, message } = req.body;
+
+  // ... rest of your logic
+});
+
 
 // SERVER START
 const PORT = process.env.PORT || 5000;
