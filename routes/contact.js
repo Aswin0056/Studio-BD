@@ -3,7 +3,7 @@ const router = express.Router();
 const pool = require('../db'); // your PostgreSQL pool setup
 
 
-router.post("/", async (req, res) => {
+router.post("/contact", async (req, res) => {
     const { name, email, message } = req.body;
     console.log("Incoming contact form data:", req.body);
   
