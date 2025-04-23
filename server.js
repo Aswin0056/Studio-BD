@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 // In your server.js or routes file
 const axios = require('axios');
 const router = express.Router();
-const contactRoute = require("./routes/contact");
+
 
 dotenv.config();
 
@@ -215,13 +215,8 @@ app.use("/api/aiData", aiDataRoutes); // ✅ this should be present
 const commentRoutes = require('./routes/comments');
 app.use('/api', commentRoutes);
 
-router.post("/", async (req, res) => {
-  console.log("📩 Contact Form Data:", req.body); // <-- this helps debug
-
-  const { name, email, message } = req.body;
-
-  // ... rest of your logic
-});
+const contactRoutes = require('./routes/contact');
+app.use('/api', contactRoutes);
 
 
 // SERVER START
