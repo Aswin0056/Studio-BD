@@ -188,14 +188,23 @@ app.post("/api/projects", async (req, res) => {
 // Delete Project
 app.delete("/api/projects/:id", async (req, res) => {
   const { id } = req.params;
+
   try {
+    // Check if the project exists
+    const projectCheck = await pool.query("SELECT * FROM projects WHERE id = $1", [id]);
+    if (projectCheck.rows.length === 0) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Proceed with deletion
     await pool.query("DELETE FROM projects WHERE id = $1", [id]);
     res.status(200).json({ message: "Project deleted successfully" });
   } catch (err) {
     console.error("Error deleting project:", err);
-    res.status(500).json({ message: "Failed to delete project" });
+    res.status(500).json({ message: "Failed to delete project", error: err.message });
   }
 });
+
 
 
 const rateLimit = require("express-rate-limit");
