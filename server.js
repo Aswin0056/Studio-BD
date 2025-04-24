@@ -218,6 +218,17 @@ router.get("/api/ping", (req, res) => {
   res.status(200).send("pong");
 });
 
+app.get("/", (req, res) => {
+  res.send("Azh Studio Backend is alive! 🚀");
+});
+
+router.get("/", (req, res) => {
+  res.send("Azh Studio API is running! ✅");
+});
+
+app.get("/ping", (req, res) => {
+  res.status(200).json({ status: "Online", message: "Backend is running ✅" });
+});
 
 
 // SERVER START
