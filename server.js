@@ -214,6 +214,9 @@ app.use('/api', commentRoutes);
 const contactRoutes = require('./routes/contact');
 app.use('/api', contactRoutes);
 
+router.get("/api/ping", (req, res) => {
+  res.status(200).send("pong");
+});
 
 
 
