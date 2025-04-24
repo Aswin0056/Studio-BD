@@ -20,7 +20,7 @@ router.post('/add-comment', async (req, res) => {
 router.get("/get-comments", async (req, res) => {
     try {
       // Query to retrieve all comments, ordered by latest first
-      const result = await pool.query("SELECT * FROM comments ORDER BY created_at DESC");
+      const result = await pool.query("SELECT * FROM comments ORDER BY created_at DESC LIMIT 20");
       
       // Send the comments as response
       return res.status(200).json(result.rows);
