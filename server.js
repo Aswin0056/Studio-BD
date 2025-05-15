@@ -230,6 +230,26 @@ app.get("/ping", (req, res) => {
   res.status(200).json({ status: "Online", message: "Backend is running ✅" });
 });
 
+// Endpoint to fetch user profile
+app.get('/api/user/profile', async (req, res) => {
+  try {
+    // Simulate user ID (this should come from authentication like JWT)
+    const userId = 1; // Replace this with actual user authentication
+
+    // Fetch user profile from the database
+    const result = await pool.query('SELECT name, bio, image FROM users WHERE id = $1', [userId]);
+
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      return res.json(user);
+    } else {
+      return res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return res.status(500).json({ error: 'Failed to load profile data. Please try again later.' });
+  }
+});
 
 // SERVER START
 const PORT = process.env.PORT || 5000;
