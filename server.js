@@ -194,7 +194,13 @@ app.delete("/api/projects/:id", async (req, res) => {
   }
 });
 
+// Serve APK files from /downloads folder
 app.use("/downloads", express.static(path.join(__dirname, "downloads")));
+
+app.get("/", (req, res) => {
+  res.send("Backend is running.");
+});
+
 
 const rateLimit = require("express-rate-limit");
 
