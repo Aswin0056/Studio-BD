@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 // In your server.js or routes file
 const axios = require('axios');
 const router = express.Router();
+const path = require("path");
 
 
 dotenv.config();
@@ -193,6 +194,7 @@ app.delete("/api/projects/:id", async (req, res) => {
   }
 });
 
+app.use("/downloads", express.static(path.join(__dirname, "downloads")));
 
 const rateLimit = require("express-rate-limit");
 
