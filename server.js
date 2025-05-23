@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const axios = require('axios');
 const router = express.Router();
 const path = require("path");
+const nodemailer = require('nodemailer');
 
 
 dotenv.config();
@@ -20,6 +21,48 @@ app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'azhstudio057@gmail.com',
+    pass: 'suwa hbac gtnp hyuy' 
+  }
+});
+
+app.post('/api/contact', async (req, res) => {
+  const { email, message } = req.body;
+
+const mailOptions = {
+  from: '"Azh Studio" <azhstudio057@gmail.com>',
+  to: email,
+  subject: 'Welcome to Azh Studio',
+  text: `Thanks for contacting Azh Studio!\n\nYour Message:\n${message}\n\n- Team Azh Studio`,
+  html: `
+    <div style="font-family: Arial, sans-serif;">
+      <h2>Welcome to Azh Studio</h2>
+      <p>Thanks for reaching out to us!</p>
+      <p><strong>Your Message:</strong></p>
+      <blockquote>${message}</blockquote>
+      <p>– Team Azh Studio</p>
+    </div>
+  `,
+  headers: {
+    'X-Priority': '3',
+    'X-Mailer': 'NodeMailer'
+  }
+};
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.messageId);
+    res.status(200).json({ success: true, message: 'Email sent successfully!' });
+  } catch (err) {
+    console.error('SendMail error:', err);
+    res.status(500).json({ success: false, message: 'Failed to send email' });
+  }
+});
+
 
 // LOGIN ROUTE
 app.post("/api/login", async (req, res) => {
