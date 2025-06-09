@@ -9,6 +9,7 @@ const axios = require('axios');
 const router = express.Router();
 const path = require("path");
 const nodemailer = require('nodemailer');
+const boardRoutes = require("./routes/boards");
 
 
 dotenv.config();
@@ -105,7 +106,7 @@ app.post("/api/login", async (req, res) => {
 
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
-
+app.use("/api/boards", boardRoutes);
 
 
 router.post("/register", async (req, res) => {
