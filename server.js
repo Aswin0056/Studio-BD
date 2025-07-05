@@ -10,6 +10,7 @@ const router = express.Router();
 const path = require("path");
 const nodemailer = require('nodemailer');
 const boardRoutes = require("./routes/boards");
+const ytdl = require("ytdl-core");
 
 
 dotenv.config();
@@ -302,6 +303,57 @@ app.get('/api/user/profile', async (req, res) => {
     console.error('Error fetching user data:', error);
     return res.status(500).json({ error: 'Failed to load profile data. Please try again later.' });
   }
+});
+
+app.get("/api/youtube", async (req, res) => {
+  const videoURL = req.query.url;
+
+  if (!videoURL || !ytdl.validateURL(videoURL)) {
+    return res.status(400).json({ success: false, message: "Invalid YouTube URL" });
+  }
+
+  try {
+    const info = await ytdl.getInfo(videoURL);
+    const { videoDetails } = info;
+
+    const response = {
+      success: true,
+      title: videoDetails.title,
+      thumbnail: videoDetails.thumbnails.at(-1).url,
+      duration: `${videoDetails.lengthSeconds}s`,
+      channel: videoDetails.author.name,
+      views: videoDetails.viewCount,
+      uploaded: videoDetails.publishDate,
+      videoUrl: `https://azhserverredirector.netlify.app/studio-server.json/api/download/video?url=${encodeURIComponent(videoURL)}`,
+      audioUrl: `https://azhserverredirector.netlify.app/studio-server.json/api/download/audio?url=${encodeURIComponent(videoURL)}`
+    };
+
+    res.json(response);
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to fetch video info" });
+  }
+});
+
+app.get("/api/download/video", (req, res) => {
+  const url = req.query.url;
+
+  if (!url || !ytdl.validateURL(url)) {
+    return res.status(400).send("Invalid URL");
+  }
+
+  res.header("Content-Disposition", 'attachment; filename="video.mp4"');
+  ytdl(url, { quality: "highestvideo", filter: "videoandaudio" }).pipe(res);
+});
+
+app.get("/api/download/audio", (req, res) => {
+  const url = req.query.url;
+
+  if (!url || !ytdl.validateURL(url)) {
+    return res.status(400).send("Invalid URL");
+  }
+
+  res.header("Content-Disposition", 'attachment; filename="audio.mp3"');
+  ytdl(url, { quality: "highestaudio", filter: "audioonly" }).pipe(res);
 });
 
 // SERVER START
