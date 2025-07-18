@@ -67,9 +67,11 @@ const mailOptions = {
 
 // POST /notification-text
 
-const notificationRoutes = require('./routes/notificationRoutes');
-// ...
-app.use('/notification-text', notificationRoutes);
+const notificationRoutes = require('./routes/notification');
+app.use('/api/notification', notificationRoutes);
+
+
+
 
 
 // let latestNotification = { text: '', timestamp: 0 };
