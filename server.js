@@ -65,6 +65,25 @@ const mailOptions = {
   }
 });
 
+// Express backend (example)
+let latestNotification = {
+  text: 'testing-expensaver-2.0',
+  timestamp: null,
+};
+
+app.get('/notification-text', (req, res) => {
+  res.json(latestNotification);
+});
+
+app.post('/notification-text', (req, res) => {
+  const { text } = req.body;
+  latestNotification = {
+    text,
+    timestamp: Date.now(),
+  };
+  res.json({ success: true });
+});
+
 
 // LOGIN ROUTE
 app.post("/api/login", async (req, res) => {
