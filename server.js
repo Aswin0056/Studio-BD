@@ -65,23 +65,22 @@ const mailOptions = {
   }
 });
 
-// Express backend (example)
-let latestNotification = {
-  text: 'testing-expensaver-2.0',
-  timestamp: null,
-};
-
-app.get('/notification-text', (req, res) => {
-  res.json(latestNotification);
-});
+// POST /notification-text
+let latestNotification = { text: '', timestamp: 0 };
 
 app.post('/notification-text', (req, res) => {
-  const { text } = req.body;
-  latestNotification = {
-    text,
-    timestamp: Date.now(),
-  };
-  res.json({ success: true });
+  const { text, timestamp } = req.body;
+  if (text && timestamp) {
+    latestNotification = { text, timestamp };
+    return res.status(200).json({ message: 'Notification updated' });
+  } else {
+    return res.status(400).json({ error: 'Missing text or timestamp' });
+  }
+});
+
+// GET /notification-text
+app.get('/notification-text', (req, res) => {
+  res.json(latestNotification);
 });
 
 
