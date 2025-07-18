@@ -66,22 +66,28 @@ const mailOptions = {
 });
 
 // POST /notification-text
-let latestNotification = { text: '', timestamp: 0 };
 
-app.post('/notification-text', (req, res) => {
-  const { text, timestamp } = req.body;
-  if (text && timestamp) {
-    latestNotification = { text, timestamp };
-    return res.status(200).json({ message: 'Notification updated' });
-  } else {
-    return res.status(400).json({ error: 'Missing text or timestamp' });
-  }
-});
+const notificationRoutes = require('./routes/notificationRoutes');
+// ...
+app.use('/notification-text', notificationRoutes);
 
-// GET /notification-text
-app.get('/notification-text', (req, res) => {
-  res.json(latestNotification);
-});
+
+// let latestNotification = { text: '', timestamp: 0 };
+
+// app.post('/notification-text', (req, res) => {
+//   const { text, timestamp } = req.body;
+//   if (text && timestamp) {
+//     latestNotification = { text, timestamp };
+//     return res.status(200).json({ message: 'Notification updated' });
+//   } else {
+//     return res.status(400).json({ error: 'Missing text or timestamp' });
+//   }
+// });
+
+// // GET /notification-text
+// app.get('/notification-text', (req, res) => {
+//   res.json(latestNotification);
+// });
 
 
 // LOGIN ROUTE
