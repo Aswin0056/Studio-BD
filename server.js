@@ -331,35 +331,46 @@ app.get('/api/user/profile', async (req, res) => {
   }
 });
 
-app.get("/api/youtube", async (req, res) => {
-  const videoURL = req.query.url;
 
-  if (!videoURL || !ytdl.validateURL(videoURL)) {
+
+app.get("/api/youtube", async (req, res) => {
+  const videoUrl = req.query.url;
+
+  if (!videoUrl) {
+    return res.status(400).json({ success: false, message: "URL missing" });
+  }
+
+  if (!ytdl.validateURL(videoUrl)) {
     return res.status(400).json({ success: false, message: "Invalid YouTube URL" });
   }
 
   try {
-    const info = await ytdl.getInfo(videoURL);
-    const { videoDetails } = info;
+    console.log("🔗 Fetching info for:", videoUrl);
 
-    const response = {
+    const info = await ytdl.getInfo(videoUrl);
+    const baseUrl = "https://studio-bd-zymf.onrender.com";
+    const encodedUrl = encodeURIComponent(videoUrl);
+
+    res.json({
       success: true,
-      title: videoDetails.title,
-      thumbnail: videoDetails.thumbnails.at(-1).url,
-      duration: `${videoDetails.lengthSeconds}s`,
-      channel: videoDetails.author.name,
-      views: videoDetails.viewCount,
-      uploaded: videoDetails.publishDate,
-      videoUrl: `https://azhserverredirector.netlify.app/studio-server.json/api/download/video?url=${encodeURIComponent(videoURL)}`,
-      audioUrl: `https://azhserverredirector.netlify.app/studio-server.json/api/download/audio?url=${encodeURIComponent(videoURL)}`
-    };
-
-    res.json(response);
+      title: info.videoDetails.title,
+      thumbnail: info.videoDetails.thumbnails?.at(-1)?.url,
+      duration: `${info.videoDetails.lengthSeconds} seconds`,
+      channel: info.videoDetails.author?.name,
+      views: info.videoDetails.viewCount,
+      uploaded: info.videoDetails.publishDate,
+      videoUrl: `${baseUrl}/api/download/video?url=${encodedUrl}`,
+      audioUrl: `${baseUrl}/api/download/audio?url=${encodedUrl}`
+    });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Failed to fetch video info" });
+    console.error("❌ YouTube fetch error:", err.message);
+    console.error(err.stack); // full stack trace
+    res.status(500).json({ success: false, message: err.message || "Internal Server Error" });
   }
 });
 
+
+// ⬇️ Video download route (MP4)
 app.get("/api/download/video", (req, res) => {
   const url = req.query.url;
 
@@ -368,9 +379,13 @@ app.get("/api/download/video", (req, res) => {
   }
 
   res.header("Content-Disposition", 'attachment; filename="video.mp4"');
-  ytdl(url, { quality: "highestvideo", filter: "videoandaudio" }).pipe(res);
+  ytdl(url, {
+    quality: "highestvideo",
+    filter: "videoandaudio"
+  }).pipe(res);
 });
 
+// 🎵 Audio download route (MP3)
 app.get("/api/download/audio", (req, res) => {
   const url = req.query.url;
 
@@ -379,8 +394,12 @@ app.get("/api/download/audio", (req, res) => {
   }
 
   res.header("Content-Disposition", 'attachment; filename="audio.mp3"');
-  ytdl(url, { quality: "highestaudio", filter: "audioonly" }).pipe(res);
+  ytdl(url, {
+    quality: "highestaudio",
+    filter: "audioonly"
+  }).pipe(res);
 });
+
 
 // SERVER START
 const PORT = process.env.PORT || 5000;
