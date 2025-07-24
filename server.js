@@ -11,6 +11,8 @@ const path = require("path");
 const nodemailer = require('nodemailer');
 const boardRoutes = require("./routes/boards");
 const play = require("play-dl");
+require('dotenv').config(); 
+
 
 
 dotenv.config();
@@ -394,6 +396,8 @@ app.get("/api/download/audio", async (req, res) => {
   }
 });
 
+const taskAuthRoutes = require('./routes/taskAuthRoutes');
+app.use(taskAuthRoutes);
 
 // SERVER START
 const PORT = process.env.PORT || 5000;

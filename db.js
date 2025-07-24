@@ -1,8 +1,11 @@
 const { Pool } = require('pg');
+require('dotenv').config(); // make sure it's here
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // for Render.com
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 module.exports = pool;
