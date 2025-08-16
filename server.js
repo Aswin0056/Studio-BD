@@ -37,25 +37,55 @@ const transporter = nodemailer.createTransport({
 app.post('/api/contact', async (req, res) => {
   const { email, message } = req.body;
 
-const mailOptions = {
-  from: '"Azh Studio" <azhstudio057@gmail.com>',
-  to: email,
-  subject: 'Welcome to Azh Studio',
-  text: `Thanks for contacting Azh Studio!\n\nYour Message:\n${message}\n\n- Team Azh Studio`,
-  html: `
-    <div style="font-family: Arial, sans-serif;">
-      <h2>Welcome to Azh Studio</h2>
-      <p>Thanks for reaching out to us!</p>
-      <p><strong>Your Message:</strong></p>
-      <blockquote>${message}</blockquote>
-      <p>– Team Azh Studio</p>
-    </div>
-  `,
-  headers: {
-    'X-Priority': '3',
-    'X-Mailer': 'NodeMailer'
-  }
-};
+  const mailOptions = {
+    from: '"Azh Studio" <azhstudio057@gmail.com>',
+    to: email,
+    subject: 'Welcome to Azh Studio',
+    text: `Thanks for contacting Azh Studio!\n\nYour Message:\n${message}\n\n- Team Azh Studio`,
+    html: `
+      <div style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px;">
+        <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+          
+          <!-- Header with Logo -->
+          <div style="background: #111827; padding: 20px; text-align: center;">
+            <img src="https://azhstudioofficial.online/logo.png" alt="Azh Studio Logo" style="height: 60px; margin-bottom: 10px;" />
+            <h2 style="color: #ffffff; margin: 0;">Welcome to Azh Studio</h2>
+          </div>
+
+          <!-- Body -->
+          <div style="padding: 20px; color: #333;">
+            <p>Hi there,</p>
+            <p>Thanks for reaching out to us! We appreciate you contacting <strong>Azh Studio</strong>. Our team will get back to you shortly.</p>
+
+            <p><strong>Your Message:</strong></p>
+            <blockquote style="border-left: 4px solid #111827; padding-left: 10px; color: #555;">
+              ${message}
+            </blockquote>
+
+            <p style="margin-top: 20px;">Best regards,<br/>Team Azh Studio</p>
+          </div>
+
+          <!-- Footer -->
+          <div style="background: #f3f4f6; padding: 15px; text-align: center; font-size: 14px; color: #666;">
+            <p style="margin: 5px 0;">📍 Azh Studio, Chennai, India</p>
+            <p style="margin: 5px 0;">🌐 <a href="https://azhstudioofficial.online" target="_blank" style="color:#111827; text-decoration: none;">azhstudioofficial.online</a></p>
+            <p style="margin: 5px 0;">
+              📧 <a href="mailto:azhstudio057@gmail.com" style="color:#111827; text-decoration: none;">azhstudio057@gmail.com</a>
+            </p>
+            <p style="margin: 5px 0;">
+              🔗 <a href="https://instagram.com/azhstudio" target="_blank" style="color:#111827; text-decoration: none;">Instagram</a> | 
+              <a href="https://linkedin.com/company/azhstudio" target="_blank" style="color:#111827; text-decoration: none;">LinkedIn</a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    `,
+    headers: {
+      'X-Priority': '3',
+      'X-Mailer': 'NodeMailer'
+    }
+  };
 
   try {
     const info = await transporter.sendMail(mailOptions);
