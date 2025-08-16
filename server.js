@@ -73,8 +73,8 @@ app.post('/api/contact', async (req, res) => {
               📧 <a href="mailto:azhstudio057@gmail.com" style="color:#111827; text-decoration: none;">azhstudio057@gmail.com</a>
             </p>
             <p style="margin: 5px 0;">
-              🔗 <a href="https://instagram.com/azhstudio" target="_blank" style="color:#111827; text-decoration: none;">Instagram</a> | 
-              <a href="https://linkedin.com/company/azhstudio" target="_blank" style="color:#111827; text-decoration: none;">LinkedIn</a>
+              🔗 <a href="https://instagram.com/azhvn.ix" target="_blank" style="color:#111827; text-decoration: none;">Instagram</a> | 
+              <a href="https://in.linkedin.com/in/aswin-i-1543b0259" target="_blank" style="color:#111827; text-decoration: none;">LinkedIn</a>
             </p>
           </div>
 
