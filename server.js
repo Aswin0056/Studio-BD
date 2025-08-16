@@ -48,7 +48,7 @@ app.post('/api/contact', async (req, res) => {
           
           <!-- Header with Logo -->
           <div style="background: #111827; padding: 20px; text-align: center;">
-            <img src="https://azhstudioofficial.online/logo.png" alt="Azh Studio Logo" style="height: 60px; margin-bottom: 10px;" />
+            <img src="https://azhstudioofficial.online/static/media/logo.d3a384681591c61905a1.png" alt="Azh Studio Logo" style="height: 60px; margin-bottom: 10px;" />
             <h2 style="color: #ffffff; margin: 0;">Welcome to Azh Studio</h2>
           </div>
 
@@ -67,7 +67,7 @@ app.post('/api/contact', async (req, res) => {
 
           <!-- Footer -->
           <div style="background: #f3f4f6; padding: 15px; text-align: center; font-size: 14px; color: #666;">
-            <p style="margin: 5px 0;">📍 Azh Studio, Chennai, India</p>
+            <p style="margin: 5px 0;">📍 Azh Studio, Kanyakumari, India</p>
             <p style="margin: 5px 0;">🌐 <a href="https://azhstudioofficial.online" target="_blank" style="color:#111827; text-decoration: none;">azhstudioofficial.online</a></p>
             <p style="margin: 5px 0;">
               📧 <a href="mailto:azhstudio057@gmail.com" style="color:#111827; text-decoration: none;">azhstudio057@gmail.com</a>
