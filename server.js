@@ -427,7 +427,7 @@ app.get("/api/download/audio", async (req, res) => {
 });
 
 
-const scanRoutes = require("./scanRoutes");
+const scanRoutes = require("./routes/scanRoutes");
 
 app.use(scanRoutes);
 
