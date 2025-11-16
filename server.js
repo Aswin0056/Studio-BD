@@ -426,6 +426,12 @@ app.get("/api/download/audio", async (req, res) => {
   }
 });
 
+
+const scanRoutes = require("./scanRoutes");
+
+app.use(scanRoutes);
+
+
 const taskAuthRoutes = require('./routes/taskAuthRoutes');
 app.use(taskAuthRoutes);
 
